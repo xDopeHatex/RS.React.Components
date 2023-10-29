@@ -1,7 +1,7 @@
 import { Component } from "react";
 import TestErrorBoundaryButton from "./TestErrorBoundaryButton";
-import { URL } from "./constants";
-import { TypeAppComponentProps, TypeAppComponentState } from "./types";
+import { URL } from "../constants/constants";
+import { TypeAppComponentProps, TypeAppComponentState } from "../types/types";
 import DataSection from "./DataSection";
 import SearchSection from "./SearchSection";
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { TypeDataSectionProps, TypeDataSectionState } from "./types";
+import { TypeDataSectionProps, TypeDataSectionState } from "../types/types";
 
 import Loader from "./Loader";
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { TypeSearchSectionProps, TypeSearchSectionState } from "./types";
+import { TypeSearchSectionProps, TypeSearchSectionState } from "../types/types";
 
 class SearchSection extends React.Component<
   TypeSearchSectionProps,
