@@ -38,16 +38,26 @@ class App extends Component<TypeAppComponentProps, TypeAppComponentState> {
 
     fetch(url, { method: "GET", headers: myHeaders })
       .then((response) => response.json())
-      .then((result: { items: { id: number; login: string }[] }) => {
-        this.setState({
-          data: result.items.map((item) => ({
-            id: item.id,
-            name: item.login,
-          })),
-          searchValue: keyWord,
-          isFetchingData: false,
-        });
-      })
+      .then(
+        (result: {
+          items: { id: number; login: string }[];
+          message: string;
+        }) => {
+          if (result.message) {
+            alert(
+              `SORRY, but you clicked a lot! so server wnat you to wait a few minutes and try again${result.message}`,
+            );
+          }
+          this.setState({
+            data: result.items.map((item) => ({
+              id: item.id,
+              name: item.login,
+            })),
+            searchValue: keyWord,
+            isFetchingData: false,
+          });
+        },
+      )
       .catch((error) => {
         this.setState({ isFetchingData: false });
         console.log("error", error);

@@ -9,14 +9,17 @@ class DataSection extends React.Component<
 > {
   render() {
     return (
-      <div className="bg-red-200 rounded-xl flex flex-col  text-lg font-medium">
-        {this.props.searchArray.map((item) => {
-          return (
-            <div className="px-4 py-2" key={item.id}>
-              {item.name}
-            </div>
-          );
-        })}
+      <div className="bg-red-200 rounded-xl flex flex-col  text-lg font-medium relative">
+        <div>
+          {!this.props.isLoading &&
+            this.props.searchArray.map((item) => {
+              return (
+                <div className="px-4 py-2" key={item.id}>
+                  {item.name}
+                </div>
+              );
+            })}
+        </div>
         {this.props.isLoading && <Loader />}
       </div>
     );
