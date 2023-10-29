@@ -14,11 +14,12 @@ class ThrowError extends Component {
   render(): ReactElement {
     return (
       <button
+        className="rounded-xl shadow-lg border-1 border-red-300 bg-red-100 px-4 py-2 hover:bg-red-400 transition-all active:translate-y-[5px] max-w-[200px] mx-auto"
         onClick={() => {
           this.setState({ isError: true });
         }}
       >
-        Throw Error
+        error button
       </button>
     );
   }

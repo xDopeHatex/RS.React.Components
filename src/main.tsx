@@ -7,7 +7,7 @@ import ErrorBoundary from "./Components/ErrorBoundary";
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ErrorBoundary>
-      <main>
+      <main className="w-screen h-screen main-bg">
         <App />
       </main>
     </ErrorBoundary>

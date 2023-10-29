@@ -65,9 +65,7 @@ class App extends Component<TypeAppComponentProps, TypeAppComponentState> {
 
   render() {
     return (
-      <>
-        <h1 className="text-red-500">Hello world</h1>
-        <TestErrorBoundaryButton />
+      <div className="max-w-[600px] mx-auto pt-[10%] flex flex-col gap-y-20">
         <SearchSection
           searchValue={this.state.searchValue}
           onChangeValue={this.searchingValue}
@@ -77,7 +75,8 @@ class App extends Component<TypeAppComponentProps, TypeAppComponentState> {
           searchArray={this.state.data}
           isLoading={this.state.isFetchingData}
         />
-      </>
+        <TestErrorBoundaryButton />
+      </div>
     );
   }
 }

@@ -9,9 +9,13 @@ class DataSection extends React.Component<
 > {
   render() {
     return (
-      <div className="bg-red-200">
+      <div className="bg-red-200 rounded-xl flex flex-col  text-lg font-medium">
         {this.props.searchArray.map((item) => {
-          return <div key={item.id}>{item.name}</div>;
+          return (
+            <div className="px-4 py-2" key={item.id}>
+              {item.name}
+            </div>
+          );
         })}
         {this.props.isLoading && <Loader />}
       </div>

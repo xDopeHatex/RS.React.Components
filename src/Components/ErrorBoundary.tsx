@@ -20,9 +20,8 @@ class ErrorBoundary extends React.Component<
   render() {
     if (this.state.errorInfo) {
       return (
-        <div>
+        <div className="max-w-[600px] mx-auto mt-[10%] bg-black rounded-xl text-white p-10">
           <h2>Sorry, but there is an error</h2>
-          <p>{this?.state?.error?.toString()}</p>
         </div>
       );
     } else {
