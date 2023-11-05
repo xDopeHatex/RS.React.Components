@@ -38,14 +38,14 @@ const App = () => {
       method: "GET",
       headers: {
         accept: "application/json",
-        Authorization: `Bearer ${KEY}}`,
+        Authorization: `Bearer ${KEY}`,
       },
     };
 
     if (keyWord) {
       url = `${URL}/search/movie?query=${keyWord}&include_adult=false&language=en-US&page=${pageNumber}`;
     } else {
-      url = `${URL}/search/movie&include_adult=false&language=en-US&page=${pageNumber}`;
+      url = `${URL}/search/movie&query=a&include_adult=false&language=en-US&page=${pageNumber}`;
     }
 
     fetch(url, options)
@@ -122,7 +122,7 @@ const App = () => {
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     setSelectOption(+value);
-    navigate(`/search/${searchValue}/currentPage/${curPage}`);
+    navigate(`/search/${searchValue}/currentPage/1`);
   };
 
   return (
