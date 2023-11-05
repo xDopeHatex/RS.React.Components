@@ -15,11 +15,10 @@ export type TypeSearchSectionProps = {
   onSearch: () => void;
 };
 
-export type TypeSearchSectionState = object;
-
 export type TypeSearchItem = {
+  poster_path: string;
   id: number;
-  name: string;
+  title: string;
 };
 
 export type TypeAppComponentState = {
@@ -30,9 +29,8 @@ export type TypeAppComponentState = {
 
 export type TypeAppComponentProps = object;
 
-export type TypeDataSectionState = object;
-
 export type TypeDataSectionProps = {
+  handleDetails: (idCur: number) => void;
   searchArray: TypeSearchItem[];
   isLoading: boolean;
 };
