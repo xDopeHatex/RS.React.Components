@@ -122,7 +122,7 @@ const App = () => {
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     setSelectOption(+value);
-    navigate(`/search/${searchValue}/currentPage/${curPage}`);
+    navigate(`/search/${searchValue}/currentPage/1`);
   };
 
   return (
