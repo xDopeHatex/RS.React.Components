@@ -5,6 +5,8 @@ import { MyParams } from "./App";
 import { useNavigate } from "react-router-dom";
 import { useSearch } from "../store/StoreContext";
 import { useParams } from "react-router-dom";
+import Loader from "./Loader";
+import { useLocation } from "react-router-dom";
 
 type TypeDataItem = {
   genres: [{ name: string }];
@@ -15,6 +17,7 @@ type TypeDataItem = {
 };
 
 const Details = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const searchValue = useSearch();
   const { currentPage, id } = useParams<keyof MyParams>() as MyParams;
@@ -49,16 +52,15 @@ const Details = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [location]);
 
   const closeDetails = () => {
     navigate(`/search/${searchValue}/currentPage/${currentPage}`);
   };
 
   return (
-    !isFetchingData &&
-    data && (
-      <div className="flex flex-col gap-6">
+    (!isFetchingData && data && (
+      <div className=" ml-6 flex flex-col gap-6" data-testid="details">
         <div>{data?.original_title}</div>
         <div>Original Language: {data?.original_language}</div>
         <img src={`${IMGAGE_URL}${data?.poster_path}`} />
@@ -70,7 +72,8 @@ const Details = () => {
         </div>
         <button onClick={closeDetails}>CLOSE</button>
       </div>
-    )
+    )) ||
+    (isFetchingData && <Loader />)
   );
 };
 

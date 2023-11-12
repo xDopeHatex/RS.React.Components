@@ -31,8 +31,6 @@ export type TypeAppComponentState = {
 export type TypeAppComponentProps = object;
 
 export type TypeDataSectionProps = {
-  curPage: number;
-  option: number;
   handleDetails: (idCur: number) => void;
 
   isLoading: boolean;

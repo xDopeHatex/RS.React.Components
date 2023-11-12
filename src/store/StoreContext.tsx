@@ -16,7 +16,7 @@ type ItemsUpdateContextType = Dispatch<SetStateAction<ItemsContextType>>;
 
 const SearchContext = createContext<SearchContextType>("");
 const SearchUpdateContext = createContext<SearchUpdateContextType>(() => {});
-const ItemsContext = createContext<ItemsContextType>([]);
+export const ItemsContext = createContext<ItemsContextType>([]);
 const ItemsUpdateContext = createContext<ItemsUpdateContextType>(() => {});
 
 const useSearch = () => {

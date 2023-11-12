@@ -6,12 +6,12 @@ import DataSection from "./DataSection";
 import SearchSection from "./SearchSection";
 import Paggination from "./Paggination";
 import { useParams, useNavigate, Outlet } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-import { useSearchParams } from "react-router-dom";
+
 import { useItemsUpdate } from "../store/StoreContext";
 
 import { TypeDataList } from "../types/types";
 import { useSearch } from "../store/StoreContext";
+import TestErrorBoundaryButton from "./TestErrorBoundaryButton";
 
 export type MyParams = {
   search: string;
@@ -20,27 +20,16 @@ export type MyParams = {
 };
 
 const App = () => {
-  let option = 20;
   const updateData = useItemsUpdate();
-  const location = useLocation();
   const navigate = useNavigate();
-  const { search, currentPage, id } = useParams<keyof MyParams>() as MyParams;
-
+  const { search, currentPage } = useParams<keyof MyParams>() as MyParams;
   const [allPages, setAllPages] = useState<number>(1);
   const [curPage, setCurPage] = useState<number>(+currentPage);
-  const [selectOption, setSelectOption] = useState<number>(20);
   const searchValue = useSearch();
-
-  const [isFetchingData, setisFetchingData] = useState(false);
+  const [isFetchingData, setIsFetchingData] = useState(false);
 
   const fetchData = (keyWord: string = "", pageNumber = 1) => {
-    let finalPageNumber: number;
-    if (option === 10) {
-      finalPageNumber = pageNumber / 2;
-    } else {
-      finalPageNumber = pageNumber;
-    }
-    setisFetchingData(true);
+    setIsFetchingData(true);
 
     let url;
     const options = {
@@ -52,9 +41,9 @@ const App = () => {
     };
 
     if (keyWord) {
-      url = `${URL}/search/movie?query=${keyWord}&include_adult=false&language=en-US&page=${finalPageNumber}`;
+      url = `${URL}/search/movie?query=${keyWord}&include_adult=false&language=en-US&page=${pageNumber}`;
     } else {
-      url = `${URL}/search/movie&query=a&include_adult=false&language=en-US&page=${finalPageNumber}`;
+      url = `${URL}/search/movie&query=a&include_adult=false&language=en-US&page=${pageNumber}`;
     }
 
     fetch(url, options)
@@ -70,29 +59,20 @@ const App = () => {
               `SORRY, but you clicked a lot! so server wnat you to wait a few minutes and try again${result.message}`,
             );
           }
-
           updateData(result.results);
 
-          console.log(selectOption);
-          if (option === 10) {
-            setAllPages(result.total_pages * 2);
-          } else {
-            setAllPages(result.total_pages);
-          }
-
-          setisFetchingData(false);
+          setAllPages(result.total_pages);
         },
       )
-      .catch((error) => {
-        setisFetchingData(false);
+      .catch((error) => {})
+      .finally(() => {
+        setIsFetchingData(false);
       });
   };
 
   const searchPageHandler = (page = 1) => {
-    console.log("CURENT", page, searchValue);
     localStorage.setItem("search", searchValue);
     setCurPage(page);
-
     navigate(`/search/${searchValue}/currentPage/${page}`);
     fetchData(searchValue, page);
   };
@@ -107,45 +87,21 @@ const App = () => {
     );
   };
 
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = event.target.value;
-    option = +value;
-    setSelectOption(+value);
-
-    setCurPage(1);
-    navigate(`/search/${searchValue}/currentPage/1`);
-    fetchData(searchValue, 1);
-  };
-
   return (
-    <div className="flex">
+    <div className="flex" data-testid="app">
       <div className="grow-1 gap-y-10 flex-col flex">
         <SearchSection onSearch={searchPageHandler} />
-        <DataSection
-          curPage={curPage}
-          option={selectOption}
-          isLoading={isFetchingData}
-          handleDetails={handleDetails}
-        />
-        <label htmlFor="page-select">Choose a number of notes per page</label>
+        <DataSection isLoading={isFetchingData} handleDetails={handleDetails} />
 
-        <select
-          name="pages"
-          id="page-select"
-          value={selectOption}
-          onChange={handleSelectChange}
-        >
-          <option value="">--Please choose an option--</option>
-          <option value="10">10</option>
-          <option value="20">20</option>
-        </select>
         <Paggination
           allPages={allPages}
           currentPage={curPage}
           setPage={setCurPage}
           changePageHandler={searchPageHandler}
         />
+        <TestErrorBoundaryButton />
       </div>
+
       <Outlet />
     </div>
   );

@@ -1,4 +1,5 @@
 import { TypeSearchSectionProps } from "../types/types";
+import { useMemo, useCallback, useEffect } from "react";
 
 import { useSearchUpdate, useSearch } from "../store/StoreContext";
 
@@ -7,10 +8,20 @@ const SearchSection = ({ onSearch }: TypeSearchSectionProps) => {
 
   const setSearchValue = useSearchUpdate();
 
+  const initialValue = "a";
+
+  const search = useMemo(() => {
+    return localStorage.getItem("search") || initialValue;
+  }, [initialValue]);
+
+  useEffect(() => {
+    setSearchValue(search);
+  }, [search]);
+
   return (
     <section>
       <h3 className="mb-3 font-semibold">
-        Type here name of the github account and click search
+        Type here name of the movie, you want to find
       </h3>
       <div className="flex items-center">
         <input

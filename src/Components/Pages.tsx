@@ -5,18 +5,12 @@ import Details from "./Details";
 
 import App from "./App";
 
-import { useSearchUpdate } from "../store/StoreContext";
-
 const Pages = () => {
-  const setSearch = useSearchUpdate();
-
   const initialValue = "a";
 
   const search = localStorage.getItem("search")
     ? localStorage.getItem("search")
     : initialValue;
-
-  setSearch(search!);
 
   return (
     <Routes>
