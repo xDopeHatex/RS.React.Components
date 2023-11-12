@@ -1,10 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import DataSection from "./DataSection";
-import { beforeEach, describe, expect } from "vitest";
-import { useNavigate } from "react-router-dom";
+import { describe, expect } from "vitest";
 
 import { BrowserRouter } from "react-router-dom";
-import { TypeDataSectionProps, TypeDataList } from "../types/types";
+import { TypeDataList } from "../types/types";
 import { ItemsContext } from "../store/StoreContext";
 
 describe("Tests for the Card List component", () => {
