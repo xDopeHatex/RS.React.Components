@@ -5,11 +5,26 @@ import Details from "./Details";
 
 import App from "./App";
 
+import { useSearchUpdate } from "../store/StoreContext";
+
 const Pages = () => {
+  const setSearch = useSearchUpdate();
+
+  const initialValue = "a";
+
+  const search = localStorage.getItem("search")
+    ? localStorage.getItem("search")
+    : initialValue;
+
+  setSearch(search!);
+
   return (
     <Routes>
       <Route path="/" element={<Wrapper />}>
-        <Route index element={<Navigate to={"search/all/currentPage/1"} />} />
+        <Route
+          index
+          element={<Navigate to={`search/${search}/currentPage/1`} />}
+        />
         <Route
           path="search/:search/currentPage/:currentPage/"
           element={<App />}

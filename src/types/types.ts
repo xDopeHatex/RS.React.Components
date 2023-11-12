@@ -3,6 +3,9 @@ import { ErrorInfo } from "react";
 export type TypeErrorBoundaryProps = {
   children: React.ReactNode;
 };
+export type TypeDataItem = { title: string; poster_path: string; id: number };
+
+export type TypeDataList = TypeDataItem[];
 
 export type TypeErrorBoundaryState = {
   error: null | Error;
@@ -10,8 +13,6 @@ export type TypeErrorBoundaryState = {
 };
 
 export type TypeSearchSectionProps = {
-  searchValue: string;
-  onChangeValue: (value: string) => void;
   onSearch: () => void;
 };
 
@@ -30,7 +31,9 @@ export type TypeAppComponentState = {
 export type TypeAppComponentProps = object;
 
 export type TypeDataSectionProps = {
+  curPage: number;
+  option: number;
   handleDetails: (idCur: number) => void;
-  searchArray: TypeSearchItem[];
+
   isLoading: boolean;
 };

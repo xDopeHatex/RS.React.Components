@@ -7,6 +7,11 @@ import SearchSection from "./SearchSection";
 import Paggination from "./Paggination";
 import { useParams, useNavigate, Outlet } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import { useItemsUpdate } from "../store/StoreContext";
+
+import { TypeDataList } from "../types/types";
+import { useSearch } from "../store/StoreContext";
 
 export type MyParams = {
   search: string;
@@ -15,22 +20,26 @@ export type MyParams = {
 };
 
 const App = () => {
+  let option = 20;
+  const updateData = useItemsUpdate();
   const location = useLocation();
   const navigate = useNavigate();
   const { search, currentPage, id } = useParams<keyof MyParams>() as MyParams;
 
-  const [searchValue, setSearchValue] = useState(search);
   const [allPages, setAllPages] = useState<number>(1);
   const [curPage, setCurPage] = useState<number>(+currentPage);
-  const [selectOption, setSelectOption] = useState<number>(10);
-
-  const [data, setData] = useState<
-    { title: string; poster_path: string; id: number }[]
-  >([]);
+  const [selectOption, setSelectOption] = useState<number>(20);
+  const searchValue = useSearch();
 
   const [isFetchingData, setisFetchingData] = useState(false);
 
   const fetchData = (keyWord: string = "", pageNumber = 1) => {
+    let finalPageNumber: number;
+    if (option === 10) {
+      finalPageNumber = pageNumber / 2;
+    } else {
+      finalPageNumber = pageNumber;
+    }
     setisFetchingData(true);
 
     let url;
@@ -43,16 +52,16 @@ const App = () => {
     };
 
     if (keyWord) {
-      url = `${URL}/search/movie?query=${keyWord}&include_adult=false&language=en-US&page=${pageNumber}`;
+      url = `${URL}/search/movie?query=${keyWord}&include_adult=false&language=en-US&page=${finalPageNumber}`;
     } else {
-      url = `${URL}/search/movie&query=a&include_adult=false&language=en-US&page=${pageNumber}`;
+      url = `${URL}/search/movie&query=a&include_adult=false&language=en-US&page=${finalPageNumber}`;
     }
 
     fetch(url, options)
       .then((response) => response.json())
       .then(
         (result: {
-          results: { title: string; poster_path: string; id: number }[];
+          results: TypeDataList;
           message: string;
           total_pages: number;
         }) => {
@@ -61,12 +70,15 @@ const App = () => {
               `SORRY, but you clicked a lot! so server wnat you to wait a few minutes and try again${result.message}`,
             );
           }
-          console.log(result.results[0]);
 
-          setData(result.results);
+          updateData(result.results);
 
-          setSearchValue(keyWord);
-          setAllPages(result.total_pages);
+          console.log(selectOption);
+          if (option === 10) {
+            setAllPages(result.total_pages * 2);
+          } else {
+            setAllPages(result.total_pages);
+          }
 
           setisFetchingData(false);
         },
@@ -76,42 +88,18 @@ const App = () => {
       });
   };
 
-  const searchingHandler = () => {
-    // const keyWord = searchValue.trim();
-    //
-    // if (keyWord) {
-    //   fetchData(keyWord);
-    // } else {
-    //   fetchData("a");
-    // }
-    //
-    // localStorage.setItem("keyWord", keyWord);
-    setCurPage(1);
-    navigate(`/search/${searchValue}/currentPage/1`);
+  const searchPageHandler = (page = 1) => {
+    console.log("CURENT", page, searchValue);
+    localStorage.setItem("search", searchValue);
+    setCurPage(page);
+
+    navigate(`/search/${searchValue}/currentPage/${page}`);
+    fetchData(searchValue, page);
   };
 
   useEffect(() => {
-    const { pathname } = location;
-
-    if (pathname.includes("/details")) {
-      navigate(`/search/${searchValue}/currentPage/${curPage}/details/${id}`);
-    } else {
-      navigate(`/search/${searchValue}/currentPage/${curPage}`);
-    }
-  }, [curPage]);
-
-  useEffect(() => {
-    // const keyWord = localStorage.getItem("keyWord");
-    // if (keyWord) {
-    //   fetchData(keyWord);
-    // }
-
     fetchData(search, curPage);
-  }, [location]);
-
-  const searchingValue = (value: string) => {
-    setSearchValue(value);
-  };
+  }, []);
 
   const handleDetails = (idCur: number) => {
     navigate(
@@ -121,20 +109,21 @@ const App = () => {
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
+    option = +value;
     setSelectOption(+value);
+
+    setCurPage(1);
     navigate(`/search/${searchValue}/currentPage/1`);
+    fetchData(searchValue, 1);
   };
 
   return (
     <div className="flex">
       <div className="grow-1 gap-y-10 flex-col flex">
-        <SearchSection
-          searchValue={searchValue}
-          onChangeValue={searchingValue}
-          onSearch={searchingHandler}
-        />
+        <SearchSection onSearch={searchPageHandler} />
         <DataSection
-          searchArray={data}
+          curPage={curPage}
+          option={selectOption}
           isLoading={isFetchingData}
           handleDetails={handleDetails}
         />
@@ -154,6 +143,7 @@ const App = () => {
           allPages={allPages}
           currentPage={curPage}
           setPage={setCurPage}
+          changePageHandler={searchPageHandler}
         />
       </div>
       <Outlet />
