@@ -60,7 +60,10 @@ const Details = () => {
 
   return (
     (!isFetchingData && data && (
-      <div className=" ml-6 flex flex-col gap-6" data-testid="details">
+      <div
+        className=" ml-6 flex flex-col gap-6 border-[2px] border-black p-4"
+        data-testid="details"
+      >
         <div>{data?.original_title}</div>
         <div>Original Language: {data?.original_language}</div>
         <img src={`${IMGAGE_URL}${data?.poster_path}`} />
@@ -70,7 +73,12 @@ const Details = () => {
           Production Counties:{" "}
           {data?.production_countries.map((item) => item.name)}
         </div>
-        <button onClick={closeDetails}>CLOSE</button>
+        <button
+          className="rounded-xl bg-black text-white"
+          onClick={closeDetails}
+        >
+          CLOSE
+        </button>
       </div>
     )) ||
     (isFetchingData && <Loader />)
