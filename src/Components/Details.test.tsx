@@ -8,21 +8,6 @@ import Details from "./Details";
 vi.mock("node-fetch");
 
 describe("Tests for the Detailed Card component", () => {
-  // test("Make sure the detailed card component correctly displays the detailed card data;", async () => {
-  //   render(
-  //     <BrowserRouter>
-  //       <Details />
-  //     </BrowserRouter>,
-  //   );
-  //
-  //   expect(screen.getByTestId("detailes")).toBeInTheDocument();
-  //
-  //   // Assertion
-  //
-  //   // Restore the original useState implementation
-  //   // React.useState = originalUseState;
-  // });
-
   test("Check that a loading indicator is displayed while fetching data;", async () => {
     const mockData = {
       original_title: "Test Movie",
