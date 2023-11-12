@@ -1,5 +1,5 @@
 import { TypeDataSectionProps } from "../types/types";
-import { IMGAGE_URL } from "../constants/constants";
+
 import { useItems } from "../store/StoreContext";
 import Card from "./Card";
 
