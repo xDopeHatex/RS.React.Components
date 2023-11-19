@@ -1,26 +1,24 @@
-// Pages.test.js
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { BrowserRouter, useLocation } from "react-router-dom";
 
 import Pages from "./Pages";
+import { store } from "../store";
+import { Provider } from "react-redux";
 
 test("renders Pages component", () => {
-  // const location = useLocation();
-  // Mock localStorage.getItem
   const localStorageMock = {
     getItem: vi.fn(),
   };
 
-  // Mock the initial value for search
   localStorageMock.getItem.mockReturnValueOnce("a");
 
-  // Mock history for BrowserRouter
-
   render(
-    <BrowserRouter>
-      <Pages />
-    </BrowserRouter>,
+    <Provider store={store}>
+      <BrowserRouter>
+        <Pages />
+      </BrowserRouter>
+    </Provider>,
   );
 
   // Check if Wrapper component is present

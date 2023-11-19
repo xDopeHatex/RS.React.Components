@@ -3,10 +3,11 @@ import { URL, KEY, IMGAGE_URL } from "../constants/constants";
 
 import { MyParams } from "./App";
 import { useNavigate } from "react-router-dom";
-import { useSearch } from "../store/StoreContext";
+
 import { useParams } from "react-router-dom";
 import Loader from "./Loader";
 import { useLocation } from "react-router-dom";
+import { useAppSelector } from "../hooks/redux";
 
 type TypeDataItem = {
   genres: [{ name: string }];
@@ -19,7 +20,8 @@ type TypeDataItem = {
 const Details = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const searchValue = useSearch();
+
+  const { search: searchValue } = useAppSelector((state) => state.movies);
   const { currentPage, id } = useParams<keyof MyParams>() as MyParams;
 
   const url: string = `${URL}/movie/${+id}?language=en-US`;

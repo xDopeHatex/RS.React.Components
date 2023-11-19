@@ -1,9 +1,10 @@
-import React, { createRef } from "react";
-import { render, waitFor, screen, fireEvent } from "@testing-library/react";
-import { BrowserRouter, Routes } from "react-router-dom";
+import React from "react";
+import { render, screen } from "@testing-library/react";
 
-import { MemoryRouter, Route } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 import Details from "./Details";
+import { store } from "../store";
+import { Provider } from "react-redux";
 
 vi.mock("node-fetch");
 
@@ -22,9 +23,11 @@ describe("Tests for the Detailed Card component", () => {
     });
 
     render(
-      <MemoryRouter initialEntries={["/details/1"]}>
-        <Details />
-      </MemoryRouter>,
+      <Provider store={store}>
+        <MemoryRouter initialEntries={["/details/1"]}>
+          <Details />
+        </MemoryRouter>
+      </Provider>,
     );
 
     // Check if loader is displayed while fetching data

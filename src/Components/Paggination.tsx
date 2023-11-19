@@ -1,14 +1,14 @@
-import { useNavigate } from "react-router-dom";
-
 const Paggination = ({
   allPages,
   currentPage,
   setPage,
+
   changePageHandler,
 }: {
   allPages: number;
   currentPage: number;
   setPage: React.Dispatch<React.SetStateAction<number>>;
+
   changePageHandler: (page: number) => void;
 }) => {
   return (

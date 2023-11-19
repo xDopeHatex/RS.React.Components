@@ -13,7 +13,11 @@ export type TypeErrorBoundaryState = {
 };
 
 export type TypeSearchSectionProps = {
-  onSearch: () => void;
+  onSearch: (search?: string) => void;
+};
+
+export type TypePageSectionProps = {
+  onSearch: (page?: number, search?: string) => void;
 };
 
 export type TypeSearchItem = {
@@ -31,7 +35,6 @@ export type TypeAppComponentState = {
 export type TypeAppComponentProps = object;
 
 export type TypeDataSectionProps = {
+  setAllPages: React.Dispatch<React.SetStateAction<number>>;
   handleDetails: (idCur: number) => void;
-
-  isLoading: boolean;
 };

@@ -1,17 +1,14 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import Card from "./Card";
-import { beforeEach, describe, expect } from "vitest";
-import { useNavigate } from "react-router-dom";
+import { describe, expect } from "vitest";
 
 import { BrowserRouter } from "react-router-dom";
-import {
-  TypeDataSectionProps,
-  TypeDataList,
-  TypeDataItem,
-} from "../types/types";
-import { ItemsContext } from "../store/StoreContext";
+import { Provider } from "react-redux";
+import { TypeDataItem } from "../types/types";
+
 import { IMGAGE_URL } from "../constants/constants";
-import * as events from "events";
+
+import { store } from "../store";
 
 describe("Tests for the Card component", () => {
   it("Ensure that the card component renders the relevant card data", () => {
@@ -25,9 +22,11 @@ describe("Tests for the Card component", () => {
     const handleDetails = (idCur: number) => {};
     function renderData(item: TypeDataItem) {
       return render(
-        <BrowserRouter>
-          <Card handleDetails={handleDetails} item={item} />
-        </BrowserRouter>,
+        <Provider store={store}>
+          <BrowserRouter>
+            <Card handleDetails={handleDetails} item={item} />
+          </BrowserRouter>
+        </Provider>,
       );
     }
 
@@ -51,9 +50,11 @@ describe("Tests for the Card component", () => {
 
     function renderData(item: TypeDataItem) {
       return render(
-        <BrowserRouter>
-          <Card handleDetails={handleDetails} item={item} />
-        </BrowserRouter>,
+        <Provider store={store}>
+          <BrowserRouter>
+            <Card handleDetails={handleDetails} item={item} />
+          </BrowserRouter>
+        </Provider>,
       );
     }
 
