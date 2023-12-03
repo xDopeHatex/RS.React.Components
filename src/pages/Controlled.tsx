@@ -6,8 +6,6 @@ import { submitForm } from "../store/formSlice";
 import { userSchema } from "../validation/UserValidation";
 import { useNavigate } from "react-router-dom";
 import { ResolverOptions } from "react-hook-form";
-// import { FormEvent } from "react";
-// import { typeFormData } from "../store/formSlice";
 
 import { useForm, SubmitHandler } from "react-hook-form";
 
@@ -19,17 +17,6 @@ function getBase64(file: Blob) {
     reader.onerror = (error) => reject(error);
   });
 }
-
-// import {
-//   nameSchema,
-//   passwordSchema,
-//   ageSchema,
-//   emailSchema,
-//   pictureSchema,
-//   acceptTCSchema,
-// } from "../validation/UserUncontrolledValidation";
-
-// type typeCurrentForm = typeFormData & {};
 
 type typeSubmitData = {
   name: string;
