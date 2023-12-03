@@ -9,10 +9,16 @@ export type typeFormData = {
   acceptTC: boolean;
   picture: string;
   country: { name: string; id: number };
-}[];
+};
+
+export type typeFormDataList = typeFormData[];
+
 export type countriesList = { name: string; id: number }[];
 
-type typeInitState = { formData: typeFormData; countriesList: countriesList };
+type typeInitState = {
+  formData: typeFormDataList;
+  countriesList: countriesList;
+};
 const initialState: typeInitState = {
   formData: [],
   countriesList: [

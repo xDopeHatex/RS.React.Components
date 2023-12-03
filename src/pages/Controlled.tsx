@@ -1,19 +1,17 @@
 import { useDispatch, useSelector } from "react-redux";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import { RootState } from "../store/store";
 import { submitForm } from "../store/formSlice";
+import { userSchema } from "../validation/UserValidation";
 import { useNavigate } from "react-router-dom";
-import { FormEvent } from "react";
+import { ResolverOptions } from "react-hook-form";
+// import { FormEvent } from "react";
+// import { typeFormData } from "../store/formSlice";
 
 import { useForm, SubmitHandler } from "react-hook-form";
 
-interface IFormInput {
-  firstName: string;
-  lastName: string;
-  age: number;
-}
-
-function getBase64(file: any) {
+function getBase64(file: Blob) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -22,24 +20,61 @@ function getBase64(file: any) {
   });
 }
 
-import {
-  nameSchema,
-  passwordSchema,
-  ageSchema,
-  emailSchema,
-  pictureSchema,
-  acceptTCSchema,
-} from "../validation/UserUncontrolledValidation";
+// import {
+//   nameSchema,
+//   passwordSchema,
+//   ageSchema,
+//   emailSchema,
+//   pictureSchema,
+//   acceptTCSchema,
+// } from "../validation/UserUncontrolledValidation";
+
+// type typeCurrentForm = typeFormData & {};
+
+type typeSubmitData = {
+  name: string;
+  age: number;
+  email: string;
+  password: string;
+  gender: string;
+  acceptTC: boolean;
+  picture: [file: Blob];
+  verifyPassword: string;
+  country: string;
+};
 
 const Controlled = () => {
-  const { register, handleSubmit } = useForm<IFormInput>();
-  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<typeSubmitData>({
+    resolver: yupResolver(userSchema) as
+      | ResolverOptions<typeSubmitData>
+      | undefined,
+  });
+
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const { countriesList } = useSelector((store: RootState) => store.form);
-  const { register, handleSubmit } = useForm();
-  const onSubmit = (data: any) => console.log(data);
+
+  const onSubmit: SubmitHandler<typeSubmitData> = async (data) => {
+    const file = data?.picture[0] as Blob;
+
+    const myFile = (await getBase64(file)) as string;
+
+    const modifiedData = {
+      ...data,
+      picture: myFile,
+      country: { name: data.country, id: 42 },
+    };
+
+    dispatch(submitForm(modifiedData));
+    navigate("/");
+    reset();
+  };
 
   return (
     <section className=" p-6  rounded-lg border-[2px]">
@@ -51,15 +86,15 @@ const Controlled = () => {
         <div className="flex flex-col relative">
           <label htmlFor="name">Name</label>
           <input
-            ref={nameRef}
+            {...register("name")}
             id="name"
             className={`rounded-xl py-2 border-[1px] px-2  ${
-              nameError ? "border-red-500" : "border-blue-500"
-            }`}
+              errors?.name ? "border-red-500" : "border-blue-500"
+            } `}
           />
-          {nameError && (
+          {errors?.name && (
             <div className="text-red-500 text-sm absolute bottom-[-20px]">
-              {nameError}
+              {errors?.name?.message}
             </div>
           )}
         </div>
@@ -68,16 +103,16 @@ const Controlled = () => {
           <label htmlFor="age">Age</label>
           <input
             defaultValue={0}
-            ref={ageRef}
+            {...register("age")}
             id="age"
             type="number"
-            className={`rounded-xl py-2 border-[1px] px-2  ${
-              ageError ? "border-red-500" : "border-blue-500"
+            className={`rounded-xl py-2 border-[1px] px-2 ${
+              errors?.age ? "border-red-500" : "border-blue-500"
             }`}
           />
-          {ageError && (
+          {errors?.age && (
             <div className="text-red-500 text-sm absolute bottom-[-40px]">
-              {ageError}
+              {errors?.age?.message}
             </div>
           )}
         </div>
@@ -85,15 +120,15 @@ const Controlled = () => {
         <div className="flex flex-col relative">
           <label htmlFor="email">Email</label>
           <input
-            ref={emailRef}
+            {...register("email")}
             id="email"
-            className={`rounded-xl py-2 border-[1px] px-2  ${
-              emailError ? "border-red-500" : "border-blue-500"
+            className={`rounded-xl py-2 border-[1px] px-2 ${
+              errors?.email ? "border-red-500" : "border-blue-500"
             }`}
           />
-          {emailError && (
+          {errors?.email?.message && (
             <div className="text-red-500 text-sm absolute bottom-[-20px]">
-              {emailError}
+              {errors?.email?.message}
             </div>
           )}
         </div>
@@ -102,15 +137,15 @@ const Controlled = () => {
           <label htmlFor="password">Password</label>
           <input
             type="password"
-            ref={passwordRef}
+            {...register("password")}
             id="password"
-            className={`rounded-xl py-2 border-[1px] px-2  ${
-              passwordError ? "border-red-500" : "border-blue-500"
-            }`}
+            className={`rounded-xl py-2 border-[1px] px-2 ${
+              errors?.password ? "border-red-500" : "border-blue-500"
+            } `}
           />
-          {passwordError && (
-            <div className="text-red-500 text-sm absolute bottom-[-20px]">
-              {passwordError}
+          {errors?.password && (
+            <div className="text-red-500 text-xs absolute bottom-[-20px]">
+              {errors?.password?.message}
             </div>
           )}
         </div>
@@ -119,15 +154,15 @@ const Controlled = () => {
           <label htmlFor="verifyPassword"> Confirm Password</label>
           <input
             type="password"
-            ref={verifyPasswordRef}
+            {...register("verifyPassword")}
             id="verifyPassword"
-            className={`rounded-xl py-2 border-[1px] px-2  ${
-              passwordError ? "border-red-500" : "border-blue-500"
-            }`}
+            className={`rounded-xl py-2 border-[1px] px-2 ${
+              errors?.verifyPassword ? "border-red-500" : "border-blue-500"
+            } `}
           />
-          {passwordError && (
-            <div className="text-red-500 text-sm absolute bottom-[-20px]">
-              {passwordError}
+          {errors?.password && (
+            <div className="text-red-500 text-xs absolute bottom-[-20px]">
+              {errors?.verifyPassword?.message}
             </div>
           )}
         </div>
@@ -135,7 +170,7 @@ const Controlled = () => {
         <div className="flex flex-col relative">
           <label htmlFor="gender"> Gender</label>
           <select
-            ref={genderRef}
+            {...register("gender")}
             name="gender"
             id="gender"
             className={`rounded-xl py-2 border-[1px] px-2  
@@ -150,33 +185,33 @@ const Controlled = () => {
           <label htmlFor="accept"> accept T&C</label>
           <input
             defaultChecked={false}
-            ref={acceptRef}
+            {...register("acceptTC")}
             id="accept"
             type="checkbox"
-            className={`rounded-xl py-2 border-[1px] px-2  ${
-              acceptError ? "border-red-500" : "border-blue-500"
+            className={`rounded-xl py-2 border-[1px] px-2 ${
+              errors?.acceptTC ? "border-red-500" : "border-blue-500"
             }`}
           />
-          {acceptError && (
+          {errors?.acceptTC && (
             <div className="text-red-500 text-sm absolute bottom-[-20px]">
-              {acceptError}
+              {errors?.acceptTC?.message}
             </div>
           )}
         </div>
 
         <div className="flex flex-col relative">
-          <label htmlFor="verifyPassword"> Upload Picture</label>
+          <label htmlFor="picture"> Upload Picture</label>
           <input
             type="file"
-            ref={pictureRef}
+            {...register("picture")}
             id="picture"
-            className={`rounded-xl py-2 border-[1px] px-2  ${
-              pictureError ? "border-red-500" : "border-blue-500"
-            }`}
+            className={`rounded-xl py-2 border-[1px] px-2 ${
+              errors?.picture ? "border-red-500" : "border-blue-500"
+            } `}
           />
-          {pictureError && (
+          {errors?.picture && (
             <div className="text-red-500 text-sm absolute bottom-[-20px]">
-              {pictureError}
+              {errors?.picture?.message}
             </div>
           )}
         </div>
@@ -184,7 +219,8 @@ const Controlled = () => {
         <div className="flex flex-col relative">
           <label htmlFor="countries">Countries</label>
           <select
-            ref={countryRef}
+            {...register("country")}
+            defaultValue="Afghanistan"
             name="countries"
             id="countries"
             className={`rounded-xl py-2 border-[1px] px-2  
@@ -197,7 +233,12 @@ const Controlled = () => {
             ))}
           </select>
         </div>
-        <button className="py-3 px-5 rounded-xl text-white bg-violet-500">
+        <button
+          className={` py-3 px-5 rounded-xl text-white  ${
+            !!Object.keys(errors).length ? "bg-slate-500" : "bg-violet-500"
+          }`}
+          disabled={!!Object.keys(errors).length}
+        >
           Submit
         </button>
       </form>

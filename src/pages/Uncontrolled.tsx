@@ -5,7 +5,7 @@ import { submitForm } from "../store/formSlice";
 import { useNavigate } from "react-router-dom";
 import { FormEvent } from "react";
 
-function getBase64(file: any) {
+function getBase64(file: Blob) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -65,7 +65,10 @@ const Uncontrolled = () => {
         ? pictureRef.current?.files[0]
         : undefined;
 
-    const myFile = (await getBase64(file)) as string;
+    let myFile;
+    if (file) {
+      myFile = (await getBase64(file)) as string;
+    }
 
     try {
       await nameSchema.validate({
@@ -129,16 +132,16 @@ const Uncontrolled = () => {
     }
 
     formData.picture = myFile as string;
-
+    console.log("sd", !!formData.name);
     if (
-      !nameError &&
-      !ageError &&
-      !emailError &&
-      !passwordError &&
-      !acceptError &&
-      !pictureError
+      !!formData.name &&
+      !!formData.age &&
+      !!formData.email &&
+      formData.password === formData.verifyPassword &&
+      formData.acceptTC &&
+      !!formData.picture
     ) {
-      console.log("finalData");
+      console.log("sd");
       dispatch(submitForm(formData));
       navigate("/");
     }
