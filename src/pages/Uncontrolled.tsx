@@ -130,7 +130,6 @@ const Uncontrolled = () => {
       const error = err as { errors: string[] };
       setAcceptError(error.errors[0]);
     }
-
     formData.picture = myFile as string;
 
     if (
