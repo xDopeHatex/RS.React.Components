@@ -132,7 +132,7 @@ const Uncontrolled = () => {
     }
 
     formData.picture = myFile as string;
-    console.log("sd", !!formData.name);
+
     if (
       !!formData.name &&
       !!formData.age &&
@@ -141,7 +141,6 @@ const Uncontrolled = () => {
       formData.acceptTC &&
       !!formData.picture
     ) {
-      console.log("sd");
       dispatch(submitForm(formData));
       navigate("/");
     }
